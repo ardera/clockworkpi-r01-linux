@@ -133,16 +133,6 @@ config CAN_KVASER_PCIEFD
 	    Kvaser Mini PCI Express HS v2
 	    Kvaser Mini PCI Express 2xHS v2
 
-config CAN_SUN4I
-	tristate "Allwinner A10 CAN controller"
-	depends on MACH_SUN4I || MACH_SUN7I || COMPILE_TEST
-	---help---
-	  Say Y here if you want to use CAN controller found on Allwinner
-	  A10/A20 SoCs.
-
-	  To compile this driver as a module, choose M here: the module will
-	  be called sun4i_can.
-
 config CAN_TI_HECC
 	depends on ARM
 	tristate "TI High End CAN Controller"

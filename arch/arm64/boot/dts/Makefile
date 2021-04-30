@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-2.0
 subdir-y += actions
 subdir-y += al
-subdir-y += allwinner
+subdir-n += allwinner
 subdir-y += altera
 subdir-y += amd
 subdir-y += amlogic
@@ -24,6 +24,7 @@ subdir-y += renesas
 subdir-y += rockchip
 subdir-y += socionext
 subdir-y += sprd
+subdir-y += sunxi
 subdir-y += synaptics
 subdir-y += ti
 subdir-y += xilinx
