@@ -155,7 +155,9 @@ skel/
 output/
 arch/arm64/boot/dts/sunxi/board.dts
 arch/arm/boot/dts/board.dts
-arch/riscv/boot/dts/sunxi/board.dts
+#arch/riscv/boot/dts/sunxi/board.dts
+test/
+test_guu/
 
 #lto lds
 scripts/module-lto.lds

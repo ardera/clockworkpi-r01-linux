@@ -1476,8 +1476,8 @@
 		usbc0:usbc0@0 {
 			device_type = "usbc0";
 			compatible = "allwinner,sunxi-otg-manager";
-			usb_port_type = <2>;
-			usb_detect_type = <1>;
+			usb_port_type = <0>;
+			usb_detect_type = <0>;
 			usb_id_gpio;
 			usb_det_vbus_gpio;
 			usb_regulator_io = "nocare";

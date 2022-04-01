@@ -545,7 +545,8 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
 		raw_spin_lock_irqsave(&pctl->lock, flags);
 		reg = readl(pctl->membase + PIO_POW_MOD_SEL_REG);
 		reg &= ~(1 << bank);
-		writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
+		//writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
+		writel(0x00000040, pctl->membase + PIO_POW_MOD_SEL_REG);
 		raw_spin_unlock_irqrestore(&pctl->lock, flags);
 
 		if (pctl->desc->io_bias_cfg_variant ==

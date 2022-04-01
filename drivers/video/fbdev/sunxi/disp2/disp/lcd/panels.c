@@ -116,6 +116,7 @@ struct __lcd_panel *panel_array[] = {
 	&fx070_panel,
 	&K080_IM2HYL802R_800X1280_mipi_panel,
 	&K101_IM2BYL02_L_800X1280_mipi_panel,
+	&icn9707_480x1280_panel,
 	NULL,
 };
 

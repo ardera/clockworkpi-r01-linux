@@ -157,4 +157,5 @@ extern struct __lcd_panel k101im2qa04_panel;
 extern struct __lcd_panel fx070_panel;
 extern struct __lcd_panel K101_IM2BYL02_L_800X1280_mipi_panel;
 extern struct __lcd_panel K080_IM2HYL802R_800X1280_mipi_panel;
+extern struct __lcd_panel icn9707_480x1280_panel;
 #endif

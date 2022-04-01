@@ -46,7 +46,7 @@
 
 #define LOG_ERR(fmt, arg...)	pr_err("[AUDIOCODEC][%s][%d]:" fmt "\n", __func__, __LINE__, ##arg)
 #define LOG_WARN(fmt, arg...)	pr_warn("[AUDIOCODEC][%s][%d]:" fmt "\n", __func__, __LINE__, ##arg)
-#define LOG_INFO(fmt, arg...)	pr_info("[AUDIOCODEC][%s][%d]:" fmt "\n", __func__, __LINE__, ##arg)
+#define LOG_INFO(fmt, arg...)	{}	//pr_info("[AUDIOCODEC][%s][%d]:" fmt "\n", __func__, __LINE__, ##arg)
 
 /* digital audio process function */
 enum sunxi_hw_dap {
@@ -614,7 +614,7 @@ static int sunxi_codec_hpspeaker_event(struct snd_soc_dapm_widget *w,
 	struct sunxi_codec_info *sunxi_codec = snd_soc_component_get_drvdata(component);
 	struct codec_spk_config *spk_cfg = &(sunxi_codec->spk_config);
 	struct codec_hw_config *hw_cfg = &(sunxi_codec->hw_config);
-
+	LOG_INFO("leo.debug.617 --> spk_cfg->used=%d,pa_level=%d,gpio=%d\n", spk_cfg->used,spk_cfg->pa_level,spk_cfg->spk_gpio);
 	switch (event) {
 	case	SND_SOC_DAPM_POST_PMU:
 #ifdef SUNXI_CODEC_DAP_ENABLE
@@ -628,6 +628,7 @@ static int sunxi_codec_hpspeaker_event(struct snd_soc_dapm_widget *w,
 		else if (hw_cfg->dachpf_cfg & DAP_HP_EN)
 			dachpf_enable(component, 0);
 #endif
+		LOG_INFO("leo.debug. --> spk_cfg->used=%d,pa_level=%d,gpio=%d\n", spk_cfg->used,spk_cfg->pa_level,spk_cfg->spk_gpio);
 		if (spk_cfg->used) {
 			gpio_direction_output(spk_cfg->spk_gpio, 1);
 			gpio_set_value(spk_cfg->spk_gpio, spk_cfg->pa_level);
@@ -796,8 +797,8 @@ static int sunxi_codec_playback_event(struct snd_soc_dapm_widget *w,
 				(0x1<<EN_DAC), (0x0<<EN_DAC));
 		/* DACL to left channel LINEOUT Mute control 0:mute 1: not mute */
 		snd_soc_component_update_bits(component, SUNXI_DAC_REG,
-				(0x1 << DACLMUTE) | (0x1 << DACRMUTE),
-				(0x0 << DACLMUTE) | (0x0 << DACRMUTE));
+				(0x1 << DACLMUTE) | (0x0 << DACRMUTE),
+				(0x1 << DACLMUTE) | (0x0 << DACRMUTE));
 		break;
 	default:
 		break;
@@ -1003,7 +1004,7 @@ static const struct snd_kcontrol_new sunxi_codec_controls[] = {
 		       LINEOUT_VOL, 0x1F, 0, lineout_tlv),
 	/* Headphone Gain */
 	SOC_SINGLE_TLV("Headphone Volume", SUNXI_HP2_REG,
-		       HEADPHONE_GAIN, 0x7, 0, headphone_gain_tlv),
+		       HEADPHONE_GAIN, 0x7, 1, headphone_gain_tlv),
 };
 
 /* lineout controls */
@@ -1062,6 +1063,7 @@ static const struct snd_kcontrol_new adc3_input_mixer[] = {
 
 /*audio dapm widget */
 static const struct snd_soc_dapm_widget sunxi_codec_dapm_widgets[] = {
+#if 0
 	SND_SOC_DAPM_AIF_IN_E("DACL", "Playback", 0, SUNXI_DAC_REG,
 				DACLEN, 0,
 				sunxi_codec_playback_event,
@@ -1071,7 +1073,7 @@ static const struct snd_soc_dapm_widget sunxi_codec_dapm_widgets[] = {
 				DACREN, 0,
 				sunxi_codec_playback_event,
 				SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_POST_PMD),
-
+#endif
 	SND_SOC_DAPM_AIF_OUT_E("ADC1", "Capture", 0, SND_SOC_NOPM, 0, 0,
 			       sunxi_codec_adc1_event,
 			       SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
@@ -1186,6 +1188,7 @@ static void sunxi_codec_init(struct snd_soc_component *component)
 	/* In order to ensure that the ADC sampling is normal,
 	 * the A chip SOC needs to always open HPLDO and RMC_EN
 	 */
+	LOG_INFO("leo.debug. --> switch\n"); 
 	if (!(sunxi_get_soc_ver() & 0x7)) {
 		snd_soc_component_update_bits(component, SUNXI_POWER_REG,
 				(0x1 << HPLDO_EN), (0x1 << HPLDO_EN));
@@ -1261,6 +1264,19 @@ static void sunxi_codec_init(struct snd_soc_component *component)
 	if (sunxi_codec->hw_config.dachpf_cfg)
 		dachpf_config(component);
 #endif
+
+	snd_soc_component_update_bits(component, SUNXI_DAC_DPC,
+			(0x1<<EN_DAC), (0x1<<EN_DAC));
+	snd_soc_component_update_bits(component, SUNXI_DAC_REG,
+			(0x1 << DACLEN) | (0x1 << DACREN) | (0x1 << DACLMUTE) | (0x1 << DACRMUTE),
+			(0x1 << DACLEN) | (0x1 << DACREN) | (0x1 << DACLMUTE) | (0x1 << DACRMUTE));
+	snd_soc_component_update_bits(component, SUNXI_RAMP_REG,
+			(0x1 << RMC_EN), (0x1 << RMC_EN));
+	snd_soc_component_update_bits(component, SUNXI_HP2_REG,
+			(0x1 << HP_DRVEN) | (0x1 << HP_DRVOUTEN) | (0x1 << RAMP_OUT_EN),
+			(0x1 << HP_DRVEN) | (0x1 << HP_DRVOUTEN) | (0x1 << RAMP_OUT_EN));
+	snd_soc_component_update_bits(component, SUNXI_POWER_REG,
+			0x1 << HPLDO_EN, 0x1 << HPLDO_EN);
 }
 
 static int sunxi_codec_startup(struct snd_pcm_substream *substream,
@@ -1550,6 +1566,7 @@ static int sunxi_codec_probe(struct snd_soc_component *component)
 	int ret;
 	struct snd_soc_dapm_context *dapm = &component->dapm;
 
+	LOG_INFO("leo.debug.1555 --> switch\n");
 	ret = snd_soc_add_component_controls(component, sunxi_codec_controls,
 					ARRAY_SIZE(sunxi_codec_controls));
 	if (ret)
@@ -1840,6 +1857,7 @@ static struct attribute_group audio_debug_attr_group = {
 
 /* regmap configuration */
 static const struct regmap_config sunxi_codec_regmap_config = {
+	.name = "sunxi_codec",
 	.reg_bits = 32,
 	.reg_stride = 4,
 	.val_bits = 32,
@@ -2145,6 +2163,10 @@ static int sunxi_codec_parse_params(struct device_node *np,
 				LOG_ERR("gpio-spk set failed, SPK not work!");
 			}
 		}
+		gpio_direction_output(sunxi_codec->spk_config.spk_gpio, 1);
+		gpio_set_value(sunxi_codec->spk_config.spk_gpio, sunxi_codec->spk_config.pa_level);
+		/* time delay to wait spk pa work fine */
+		msleep(sunxi_codec->spk_config.pa_msleep);
 	} else {
 		sunxi_codec->spk_config.used = 0;
 	}
@@ -2164,10 +2186,13 @@ static int sunxi_codec_parse_params(struct device_node *np,
 				LOG_ERR("gpio-spk-pwr set failed, SPK not work!");
 			}
 		}
+		gpio_direction_output(sunxi_codec->spk_pwr_config.spk_gpio, 1);
+		gpio_set_value(sunxi_codec->spk_pwr_config.spk_gpio, sunxi_codec->spk_pwr_config.pa_level);
+		/* time delay to wait spk pa work fine */
+		msleep(sunxi_codec->spk_pwr_config.pa_msleep);
 	} else {
 		sunxi_codec->spk_pwr_config.used = 0;
 	}
-
 	return 0;
 }
 

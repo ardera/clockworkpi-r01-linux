@@ -33,7 +33,7 @@
 
 #define LOG_ERR(fmt, arg...)	pr_err("[SNDCODEC][%s][%d]:" fmt "\n", __func__, __LINE__, ##arg)
 #define LOG_WARN(fmt, arg...)	pr_warn("[SNDCODEC][%s][%d]:" fmt "\n", __func__, __LINE__, ##arg)
-#define LOG_INFO(fmt, arg...)	pr_info("[SNDCODEC][%s][%d]:" fmt "\n", __func__, __LINE__, ##arg)
+#define LOG_INFO(fmt, arg...)	{}	//pr_info("[SNDCODEC][%s][%d]:" fmt "\n", __func__, __LINE__, ##arg)
 
 static int mdata_threshold = 0x10;
 module_param(mdata_threshold, int, 0644);

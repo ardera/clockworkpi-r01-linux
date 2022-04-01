@@ -69,5 +69,5 @@ disp-objs += lcd/panels.o lcd/lcd_source.o lcd/default_panel.o \
 		lcd/cpu_gg1p4062utsw.o lcd/ls029b3sx02.o \
 		lcd/he0801a068.o lcd/inet_dsi_panel.o lcd/lq101r1sx03.o  \
 		lcd/WilliamLcd.o lcd/bp101wx1-206.o lcd/k101im2qa04.o  lcd/fx070.o \
-		lcd/CC08021801_310_800X1280.o lcd/K080_IM2HYL802R_800X1280.o lcd/K101_IM2BYL02_L_800X1280.o
+		lcd/CC08021801_310_800X1280.o lcd/K080_IM2HYL802R_800X1280.o lcd/K101_IM2BYL02_L_800X1280.o lcd/icn9707_480x1280.o
 disp-objs += $(obj_low)

@@ -671,7 +671,7 @@ static int sunxi_mmc_finalize_request(struct sunxi_mmc_host *host)
 	bool cont_dat_cmd = false;
 
 	if (host->int_sum & SDXC_INTERRUPT_ERROR_BIT) {
-		sunxi_mmc_dump_errinfo(host);
+//		sunxi_mmc_dump_errinfo(host);
 		if (((host->ctl_spec_cap & SUNXI_SC_EN_RETRY) && data)\
 			|| ((host->ctl_spec_cap & SUNXI_SC_EN_RETRY_CMD) && !data)) {
 			host->mrq_retry = mrq;
