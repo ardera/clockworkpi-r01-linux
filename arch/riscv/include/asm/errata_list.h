@@ -68,27 +68,21 @@ asm(ALTERNATIVE_2("li %0, 0\t\nnop",					\
  */
 #define ALT_THEAD_PMA(_val)						\
 asm volatile(ALTERNATIVE(						\
-	"nop\n\t"							\
-	"nop\n\t"							\
-	"nop\n\t"							\
-	"nop\n\t"							\
-	"nop\n\t"							\
-	"nop\n\t"							\
-	"nop",								\
-	"li      t3, %2\n\t"						\
-	"slli    t3, t3, %4\n\t"					\
+	__nops(7),							\
+	"li      t3, %1\n\t"						\
+	"slli    t3, t3, %3\n\t"					\
 	"and     t3, %0, t3\n\t"					\
 	"bne     t3, zero, 2f\n\t"					\
-	"li      t3, %3\n\t"						\
-	"slli    t3, t3, %4\n\t"					\
+	"li      t3, %2\n\t"						\
+	"slli    t3, t3, %3\n\t"					\
 	"or      %0, %0, t3\n\t"					\
 	"2:",  THEAD_VENDOR_ID,						\
 		ERRATA_THEAD_PBMT, CONFIG_ERRATA_THEAD_PBMT)		\
 	: "+r"(_val)							\
-	: "0"(_val),							\
-	  "I"(_PAGE_MTMASK_THEAD >> ALT_THEAD_PBMT_SHIFT),		\
+	: "I"(_PAGE_MTMASK_THEAD >> ALT_THEAD_PBMT_SHIFT),		\
 	  "I"(_PAGE_PMA_THEAD >> ALT_THEAD_PBMT_SHIFT),			\
-	  "I"(ALT_THEAD_PBMT_SHIFT))
+	  "I"(ALT_THEAD_PBMT_SHIFT)					\
+	: "t3")
 #else
 #define ALT_THEAD_PMA(_val)
 #endif
