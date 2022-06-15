@@ -156,7 +156,7 @@ output/
 arch/arm64/boot/dts/sunxi/board.dts
 arch/arm/boot/dts/board.dts
 #arch/riscv/boot/dts/sunxi/board.dts
-test/
+test/rootfs/
 test_guu/
 
 #lto lds
